@@ -1,7 +1,7 @@
 /* eslint-disable semi */
 /* eslint-disable quotes */
 const { describe, it, expect, beforeAll, afterEach } = require("@jest/globals");
-const { User } = require("./index.js");
+const { User, Deck } = require("./index.js");
 const { db } = require("../db/config.js");
 
 // clear db and create new user before tests
@@ -45,5 +45,22 @@ describe("The User Model", () => {
 
     // Assert
     expect(user).toBeNull();
+  });
+
+  describe("One-to-One Association", () => {
+    it("User has exactly one Deck - One-to-One Association", async () => {
+      let user = await User.create({ username: "ancano" });
+      const deck1 = await Deck.create({ name: "Fire", xp: 150 });
+      const deck2 = await Deck.create({ name: "Water", xp: 75 });
+
+      await user.setDeck(deck1);
+      // the line below overwrites the line above
+      await user.setDeck(deck2);
+      user = await User.findByPk(user.id);
+
+      const finalDeck = await user.getDeck();
+
+      expect(finalDeck.toJSON()).toEqual(deck2.toJSON());
+    });
   });
 });
