@@ -1,7 +1,7 @@
 /* eslint-disable semi */
 /* eslint-disable quotes */
 const { describe, it, expect, beforeAll, afterEach } = require("@jest/globals");
-const { Card } = require("./index.js");
+const { Card, Deck } = require("./index.js");
 const { db } = require("../db/config.js");
 
 // clear db and create new user before tests

@@ -1,7 +1,7 @@
 /* eslint-disable semi */
 /* eslint-disable quotes */
 const { describe, it, expect, beforeAll, afterEach } = require("@jest/globals");
-const { User, Deck } = require("./index.js");
+const { User, Deck, Card } = require("./index.js");
 const { db } = require("../db/config.js");
 
 // clear db and create new user before tests
@@ -60,6 +60,31 @@ describe("The Deck Model", () => {
       const finalUser = await deck.getUser();
 
       expect(finalUser.toJSON()).toEqual(user2.toJSON());
+    });
+  });
+
+  describe("One-to-Many Association", () => {
+    it("Each Deck may contain many Cards", async () => {
+      const deck = await Deck.create({ name: "Water", xp: 75 });
+      const allCards = await Card.bulkCreate([
+        {
+          name: "Arcturus Spellweaver",
+          mojo: 100,
+          stamina: 10,
+          imgUrl: "http://localhost:5000/img/arcturus-spellweaver.jpg",
+        },
+        {
+          name: "Theron Thunderstrike",
+          mojo: 100,
+          stamina: 10,
+          imgUrl: "http://localhost:5000/img/theron-thunderstrike.jpg",
+        },
+      ]);
+
+      await deck.setCards(allCards);
+      const finalDeck = await deck.getCards();
+      // console.log(JSON.stringify(finalDeck, null, 2));
+      expect(finalDeck.length).toBe(2);
     });
   });
 });
