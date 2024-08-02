@@ -85,6 +85,19 @@ describe("The Deck Model", () => {
       const finalDeck = await deck.getCards();
       // console.log(JSON.stringify(finalDeck, null, 2));
       expect(finalDeck.length).toBe(2);
+      expect(finalDeck).toEqual(
+        expect.arrayContaining(
+          allCards.map((card) =>
+            expect.objectContaining({
+              id: card.id,
+              name: card.name,
+              mojo: card.mojo,
+              stamina: card.stamina,
+              imgUrl: card.imgUrl,
+            })
+          )
+        )
+      );
     });
   });
 });
