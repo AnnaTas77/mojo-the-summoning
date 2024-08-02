@@ -67,4 +67,28 @@ describe("The Card Model", () => {
     // Assert
     expect(card).toBeNull();
   });
+
+  describe("One-to-Many Association", () => {
+    it("A Card may only belong to one Deck", async () => {
+      let card = await Card.create({
+        name: "Arcturus Spellweaver",
+        mojo: 100,
+        stamina: 10,
+        imgUrl: "http://localhost:5000/img/arcturus-spellweaver.jpg",
+      });
+
+      const deck1 = await Deck.create({ name: "Fire", xp: 150 });
+      const deck2 = await Deck.create({ name: "Water", xp: 75 });
+
+      await card.setDeck(deck1);
+      await card.setDeck(deck2);
+      card = await Card.findByPk(card.id);
+      const finalDeck = await card.getDeck();
+
+      // console.log("Card: ", card.toJSON());
+      // console.log("finalDeck: ", finalDeck.toJSON());
+
+      expect(finalDeck.id).toBe(card.DeckId);
+    });
+  });
 });
