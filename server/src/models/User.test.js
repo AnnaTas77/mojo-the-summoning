@@ -12,7 +12,7 @@ beforeAll(async () => {
 // clear db after tests
 afterEach(async () => await db.truncate({ cascade: true }));
 
-describe("The User model", () => {
+describe("The User Model", () => {
   it("creates a User", async () => {
     const user = await User.create({ username: "dumbledore" });
 
@@ -22,10 +22,28 @@ describe("The User model", () => {
 
   it("finds a User", async () => {
     await User.create({ username: "gandalf" });
-
     const user = await User.findOne({ where: { username: "gandalf" } });
 
     expect(user).toBeInstanceOf(User);
     expect(user.username).toBe("gandalf");
+  });
+
+  it("updates a User", async () => {
+    let user = await User.create({ username: "merlyn" });
+    user = await user.update({ username: "merlin" });
+
+    expect(user.username).toBe("merlin");
+  });
+
+  it("deletes a User", async () => {
+    // Arrange
+    let user = await User.create({ username: "grindelwald" });
+
+    // Act
+    await user.destroy();
+    user = await User.findByPk(user.id);
+
+    // Assert
+    expect(user).toBeNull();
   });
 });
