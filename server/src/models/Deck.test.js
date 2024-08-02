@@ -13,6 +13,39 @@ beforeAll(async () => {
 afterEach(async () => await db.truncate({ cascade: true }));
 
 describe("The Deck Model", () => {
+  it("creates a Deck", async () => {
+    const deck = await Deck.create({ name: "Fire", xp: 150 });
+
+    expect(deck).toBeInstanceOf(Deck);
+    expect(deck.name).toBe("Fire");
+  });
+
+  it("finds a Deck", async () => {
+    await Deck.create({ name: "Fire", xp: 150 });
+    const deck = await Deck.findOne({ where: { name: "Fire" } });
+
+    expect(deck).toBeInstanceOf(Deck);
+    expect(deck.name).toBe("Fire");
+  });
+
+  it("updates a Deck", async () => {
+    let deck = await Deck.create({ name: "Fire", xp: 150 });
+    deck = await deck.update({ name: "Water" });
+
+    expect(deck.name).toBe("Water");
+  });
+
+  it("deletes a Deck", async () => {
+    // Arrange
+    let deck = await Deck.create({ name: "Fire", xp: 150 });
+    // Act
+    await deck.destroy();
+    deck = await Deck.findByPk(deck.id);
+
+    // Assert
+    expect(deck).toBeNull();
+  });
+
   describe("One-to-One Association", () => {
     it("Deck has exactly one User - One-to-One Association", async () => {
       let deck = await Deck.create({ name: "Water", xp: 75 });
