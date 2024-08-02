@@ -85,6 +85,10 @@ describe("The Deck Model", () => {
       const finalDeck = await deck.getCards();
       // console.log(JSON.stringify(finalDeck, null, 2));
       expect(finalDeck.length).toBe(2);
+
+      // Expects the array of found cards to be equal to an array that contains
+      // objects that contain a specific subset of properties, ignoring the
+      // createdAt, updatedAt, and DeckId properties.
       expect(finalDeck).toEqual(
         expect.arrayContaining(
           allCards.map((card) =>
