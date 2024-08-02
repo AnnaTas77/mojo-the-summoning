@@ -1,26 +1,31 @@
-const { describe, it, expect, beforeAll, afterAll } = require('@jest/globals')
-const { User } = require('.')
-const db = require('../db/config')
-
-// define in global scope
-let user
+/* eslint-disable semi */
+/* eslint-disable quotes */
+const { describe, it, expect, beforeAll, afterEach } = require("@jest/globals");
+const { User } = require("./index.js");
+const { db } = require("../db/config.js");
 
 // clear db and create new user before tests
 beforeAll(async () => {
-  await db.sync({ force: true })
-  user = await User.create({ username: 'gandalf' })
-})
+  await db.sync({ force: true });
+});
 
 // clear db after tests
-afterAll(async () => await db.sync({ force: true }))
+afterEach(async () => await db.truncate({ cascade: true }));
 
-describe('User', () => {
-  it('has an id', async () => {
-    expect(user).toHaveProperty('id')
-  })
+describe("The User model", () => {
+  it("creates a User", async () => {
+    const user = await User.create({ username: "dumbledore" });
 
-  /**
-   * Create more tests
-   * E.g. check that the username of the created user is actually gandalf
-   */
-})
+    expect(user).toBeInstanceOf(User);
+    expect(user.username).toBe("dumbledore");
+  });
+
+  it("finds a User", async () => {
+    await User.create({ username: "gandalf" });
+
+    const user = await User.findOne({ where: { username: "gandalf" } });
+
+    expect(user).toBeInstanceOf(User);
+    expect(user.username).toBe("gandalf");
+  });
+});

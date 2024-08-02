@@ -5,15 +5,18 @@
 // create your User model here
 const { db, DataTypes, Model } = require("../db/config");
 
-class User extends Model {}
+class Attack extends Model {}
 
-User.init(
+Attack.init(
   {
-    username: DataTypes.TEXT,
+    title: DataTypes.TEXT,
+    mojoCost: DataTypes.INTEGER,
+    staminaCost: DataTypes.INTEGER,
   },
   {
+    // pass the sequelize instance
     sequelize: db,
   }
 );
 
-module.exports = { User };
+module.exports = { Attack };

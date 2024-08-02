@@ -1,19 +1,18 @@
 /* eslint-disable semi */
 /* eslint-disable comma-dangle */
-/* eslint-disable quotes */
-
-// create your User model here
+// eslint-disable-next-line quotes
 const { db, DataTypes, Model } = require("../db/config");
 
-class User extends Model {}
+class Deck extends Model {}
 
-User.init(
+Deck.init(
   {
-    username: DataTypes.TEXT,
+    name: DataTypes.TEXT,
+    xp: DataTypes.INTEGER,
   },
   {
     sequelize: db,
   }
 );
 
-module.exports = { User };
+module.exports = { Deck };
